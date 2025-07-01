@@ -3,7 +3,7 @@ from app.ocr.extract_text import extract_text_from_images
 from app.storage.db import insert_document
 import sys, os
 
-pdf_path = sys.argv[1]
+pdf_path = "sample.pdf"
 filename = os.path.basename(pdf_path)
 output_dir = "data/images"
 text_path = f"data/extracted_texts/{filename}.txt"

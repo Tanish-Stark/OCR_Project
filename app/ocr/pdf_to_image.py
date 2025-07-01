@@ -1,7 +1,29 @@
+import pytesseract
 from pdf2image import convert_from_path
+from PIL import Image
 import os
 
-def pdf_to_images(pdf_path, output_dir, dpi=300):
-    os.makedirs(output_dir, exist_ok=True)
-    images = convert_from_path(pdf_path, dpi=dpi, output_folder=output_dir)
-    return images
+# Set language codes (hin = Hindi, mar = Marathi, eng = English)
+LANGS = "hin+mar+eng"
+
+# Path to your PDF
+pdf_path = os.path.join(os.path.dirname(__file__), "sample.pdf")
+
+# Output directory for images
+output_dir = "temp_images"
+os.makedirs(output_dir, exist_ok=True)
+
+# Convert PDF to images (1 image per page)
+images = convert_from_path(pdf_path, dpi=300, output_folder=output_dir)
+
+# Extract text from each image
+full_text = ""
+for i, image in enumerate(images):
+    text = pytesseract.image_to_string(image, lang=LANGS)
+    full_text += f"\n--- Page {i + 1} ---\n{text}"
+
+# Save extracted text
+with open("extracted_text.txt", "w", encoding="utf-8") as f:
+    f.write(full_text)
+
+print("✅ Text extraction complete. Check 'extracted_text.txt'")
